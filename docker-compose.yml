@@ -1,0 +1,66 @@
+version: '3.7'
+#Create by Jesus Tejerina Rivera
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx-for-laravel9
+    restart: always
+    ports:
+      - 8888:80
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    working_dir: /var/www/html
+    depends_on:
+      - php
+      - mariadb
+    networks:
+      - laravel
+
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    container_name: mariadb-for-laravel9
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=userpassword
+      - MARIADB_DATABASE=your_database
+      - MARIADB_ROOT_PASSWORD=rootpassword
+      - MARIADB_SKIP_TEST_DB=yes
+    ports:
+      - 4306:3306
+    volumes:
+      - ./mariadb:/bitnami/mariadb/data
+    networks:
+      - laravel
+
+  php:
+    image: jesusitodocker/for-laravel9:1.0
+    container_name: php-for-laravel9
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    ports:
+      - 9000:80
+    networks:
+      - laravel
+
+  phpmyadmin:
+    image: phpmyadmin:5.0
+    container_name: phpmyadmin-for-laravel9
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - mariadb
+    networks:
+      - laravel
+
+networks:
+  laravel:

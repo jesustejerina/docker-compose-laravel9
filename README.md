@@ -4,6 +4,7 @@ Include container nginx, php, mariadb, phpmyadmin<br><br>
 Create two folders: src and mariadb<br>
 Inside folder Mariadb, will store the data generated.<br>
 The laravel 9 project, you have to will create inside the src folder. Get in terminal of php container and execute the command COMPOSER CREATE-PROJECT LARAVEL/LARAVEL . (note the dot at the end. That indicates that the project will not generate a folder name).<br><br>
+Inside container php run: chown -R www-data:www-data storage<br><br>
 <b>php container include:</b><br>
 Image base php:8.1.15-fpm-alpine3.17<br>
 composer 2.53,<br>
